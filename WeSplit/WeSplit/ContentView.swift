@@ -13,14 +13,22 @@ struct ContentView: View {
     @State private var tipPercentage = 20
     @FocusState private var amountIsFocused: Bool
     
-    let tipPercentages = [10, 15, 20, 25, 0]
+    var formatter: FloatingPointFormatStyle
+        
+    }
     
-    var totalPerPerson: Double {
-        let peopleCount = Double(numberOfPeople + 2)
+
+    var grandTotal: Double {
         let tipSelection = Double(tipPercentage)
         
         let tipValue = checkAmount / 100 * tipSelection
-        let grandTotal = checkAmount + tipValue
+        return checkAmount + tipValue
+        
+    }
+    
+    var totalPerPerson: Double {
+        let peopleCount = Double(numberOfPeople + 2)
+        
         let amountPerPerson = grandTotal / peopleCount
         
         return amountPerPerson
@@ -34,8 +42,6 @@ struct ContentView: View {
                         .keyboardType(.decimalPad)
                         .focused($amountIsFocused)
                     
-                    /* TextField("Number of people", text: $numberOfPeople)
-                     .keyboardType(.numberPad) */
                     Picker("Number of people", selection: $numberOfPeople) {
                         ForEach(2..<100) {
                             Text("\($0) people")
@@ -45,20 +51,20 @@ struct ContentView: View {
                 
                 Section {
                     Picker("Tip percentage", selection: $tipPercentage) {
-                        ForEach(tipPercentages, id: \.self) {
+                        ForEach(0..<101, id: \.self) {
                             Text($0, format: .percent)
                         }
-                    }.pickerStyle(SegmentedPickerStyle())
+                    }
                 } header: {
                     Text("How much tip do you want to leave?")
                 }
                 
-                //                Section(header: Text("Check total")) {
-                //                    Text("$\(grandTotal, specifier: "%.2f")")
-                //                }
+                Section(header: Text("Check total")) {
+                    Text(grandTotal, format: .currency(code: Locale.current.currencyCode ?? "USD"))
+                }
                 
                 Section(header: Text("Amount per person")) {
-                    Text("$\(totalPerPerson, specifier: "%.2f")")
+                    Text(totalPerPerson, format: .currency(code: Locale.current.currencyCode ?? "USD"))
                 }
             } //: FORM
             .navigationTitle("WeSplit")
