@@ -12,11 +12,6 @@ struct ContentView: View {
     @State private var numberOfPeople = 2
     @State private var tipPercentage = 20
     @FocusState private var amountIsFocused: Bool
-    
-    var formatter: FloatingPointFormatStyle
-        
-    }
-    
 
     var grandTotal: Double {
         let tipSelection = Double(tipPercentage)
